@@ -6,13 +6,21 @@ type Restaurant = {
 };
 
 type RestaurantDetailsData = {
-  address: string;
-  openingHours: {
-    weekday: string;
-    weekend: string;
+  id: string;
+  name: string;
+  shortDescription: string;
+  cuisine: string;
+  rating: number;
+  details: {
+    id: number;
+    address: string;
+    openingHours: {
+      weekday: string;
+      weekend: string;
+    };
+    reviewScore: number;
+    contactEmail: string;
   };
-  reviewScore: number;
-  contactEmail: string;
 };
 
 export const getRestaurants = async () => {

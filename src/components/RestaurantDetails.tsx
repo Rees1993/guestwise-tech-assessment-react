@@ -10,12 +10,7 @@ type RestaurantDetailsProps = {
 const RestaurantDetails: React.FC<RestaurantDetailsProps> = ({
   restaurantId,
 }) => {
-  const {
-    data: details,
-    isPending,
-    isError,
-    error,
-  } = useQuery({
+  const { data, isPending, isError, error } = useQuery({
     queryKey: ["restaurants", restaurantId],
     queryFn: () => getRestaurantDetails(restaurantId),
   });
@@ -27,16 +22,23 @@ const RestaurantDetails: React.FC<RestaurantDetailsProps> = ({
     return <p>An error has occurred: " + {error.message}</p>;
   }
 
-  if (details === undefined) return <p>Restaurant not found!</p>;
+  if (data === undefined) return <p>Restaurant not found!</p>;
+
+  console.log(data);
 
   return (
     <Container>
       <Card>
         <Card.Body>
           <Card.Title>Restaurant Details</Card.Title>
-          <Card.Text>Address: {details.address}</Card.Text>
-          <Card.Text>Review Score: {details.reviewScore}</Card.Text>
-          <Card.Text>Contact: {details.contactEmail}</Card.Text>
+          <Card.Text>Address: {data.details.address}</Card.Text>
+          <Card.Text>
+            Opening Hours: <br />
+            Weekday: {data.details.openingHours.weekday} <br />
+            Weekend: {data.details.openingHours.weekend}
+          </Card.Text>
+          <Card.Text>Review Score: {data.details.reviewScore}</Card.Text>
+          <Card.Text>Contact: {data.details.contactEmail}</Card.Text>
         </Card.Body>
       </Card>
     </Container>
