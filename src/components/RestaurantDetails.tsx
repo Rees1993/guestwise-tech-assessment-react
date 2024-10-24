@@ -24,8 +24,6 @@ const RestaurantDetails: React.FC<RestaurantDetailsProps> = ({
 
   if (data === undefined) return <p>Restaurant not found!</p>;
 
-  console.log(data);
-
   return (
     <Container>
       <Card>
