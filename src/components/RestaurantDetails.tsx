@@ -1,35 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Card, Container } from "react-bootstrap";
 import { getRestaurantDetails } from "../services/api";
+import { useQuery } from "@tanstack/react-query";
 
 type RestaurantDetailsProps = {
   restaurantId: number;
 };
 
-type RestaurantDetailsData = {
-  address: string;
-  openingHours: {
-    weekday: string;
-    weekend: string;
-  };
-  reviewScore: number;
-  contactEmail: string;
-};
-
 const RestaurantDetails: React.FC<RestaurantDetailsProps> = ({
   restaurantId,
 }) => {
-  if (!restaurantId) return null;
+  const {
+    data: details,
+    isPending,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["restaurants", restaurantId],
+    queryFn: () => getRestaurantDetails(restaurantId),
+  });
 
-  const details = {
-    address: "123 Fine St, London",
-    openingHours: {
-      weekday: "12:00 PM - 10:00 PM",
-      weekend: "11:00 AM - 11:00 PM",
-    },
-    reviewScore: 4.7,
-    contactEmail: "info@velvetandvine.co.uk",
-  };
+  //TODO: Better loading state
+  if (isPending) return <p>Loading...</p>;
+
+  if (isError) {
+    return <p>An error has occurred: " + {error.message}</p>;
+  }
+
+  if (details === undefined) return <p>Restaurant not found!</p>;
 
   return (
     <Container>
