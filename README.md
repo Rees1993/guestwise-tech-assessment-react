@@ -135,3 +135,25 @@ Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
 - We're not looking for a perfect solution, or lots of UI creativity, but we want to see how you approach the problem and your thought process.
 
 Good luck, and happy coding!
+
+## Summary and Next Steps
+
+### Summary of changes
+
+Restaurant List and Details are being fetched from the server - implemented using Tanstack Query. The List takes in a searchValue, which is debounced to prevent an overload of requests. It is also possible to sort by Ascending and Descending. The sort function also handles numbers in the string, so Restaurant 3 will appear before Restaurant 10.
+
+BookTable implements Zod and React Hook Form for client-side validation of the form. It implements custom date and time validation to ensure it is in the future and an hour ahead per requirements.
+
+### Next Steps
+
+There a few scattered TODOs throughout the codebase. These relate to either error/loading states and improve any existing functionality for a better UX. It also includes the question about moving types to a dedicated file.
+
+Implementing useOptimistic, or some form of optimistic UI, would be benefical for UX and will make the application feel smoother, espeically for slower devices. Tanstack Query allows for automatic and manual retries of mutations in case these failed.
+
+Sorting functionality currently utilises the name, in ascending or descending order, but rating should also be implemented. This would probably be implemented by reducing the current button and use icons, and Aria Labels for accessibility.
+
+Additionally, the current functionality is only client-side so upon refresh, state is lost. Next steps would be to look at hoisting state up tot the URL and using that as a source of truth - potentually implementing a library like react-router to allow this.
+
+Implementing Unit, E2E, and Integration Tests would be important at some point. A specific scenario would be mocking external API calls to make sure they are returning data as expected, and mutations are inserting/updating correctly. This would also allow for higher confidence in refactors as can test existing functionality isn't broken.
+
+Once functionality is completed. a review of the UI would be neede to ensure it is more responsive, it adheres to accessibility and implemented better UX, such as feedback when submitting a form.
