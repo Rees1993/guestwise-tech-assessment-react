@@ -23,9 +23,19 @@ type RestaurantDetailsData = {
   };
 };
 
-export const getRestaurants = async () => {
+export const getRestaurants = async (searchQuery = "") => {
   const response = await fetch("http://localhost:3001/restaurants");
-  return response.json() as unknown as Restaurant[];
+  const restaurants = (await response.json()) as Restaurant[];
+
+  // If searchQuery is empty, return all restaurants
+  if (!searchQuery) {
+    return restaurants;
+  }
+
+  // Case-insensitive filtering by restaurant name
+  return restaurants.filter((restaurant) =>
+    restaurant.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 };
 
 export const getRestaurantDetails = async (id: number) => {
