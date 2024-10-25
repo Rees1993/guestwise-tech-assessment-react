@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useRef, useState } from "react";
-import { ListGroup, Container, Form } from "react-bootstrap";
+import { ListGroup, Container, Form, Button } from "react-bootstrap";
 import { getRestaurants } from "../services/api";
 import useDebounce from "../hooks/useDebounce";
 
@@ -11,7 +11,10 @@ type RestaurantListProps = {
 const RestaurantList: React.FC<RestaurantListProps> = ({
   onRestaurantSelect,
 }) => {
+  // TODO: Look at moving all state to URL
   const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
   const debouncedValue = useDebounce(search, 300);
 
   const {
@@ -34,6 +37,21 @@ const RestaurantList: React.FC<RestaurantListProps> = ({
 
   if (restaurants === undefined) return <p>No restaurants found!</p>;
 
+  const sortedRestaurants = restaurants.sort((a, b) => {
+    // Ensures Resturant 3 will come before Restuarant 10
+    if (sortOrder === "asc") {
+      return a.name.localeCompare(b.name, undefined, {
+        numeric: true,
+        sensitivity: "base",
+      });
+    }
+
+    return b.name.localeCompare(a.name, undefined, {
+      numeric: true,
+      sensitivity: "base",
+    });
+  });
+
   return (
     <Container>
       <h2>Restaurants</h2>
@@ -44,10 +62,16 @@ const RestaurantList: React.FC<RestaurantListProps> = ({
           onChange={(e) => setSearch(e.target.value)} // Update search query on input change
         />
       </Form.Group>
-
+      <Button
+        onClick={() =>
+          setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+        }
+      >
+        Sort Alphabetically {sortOrder === "asc" ? "Descending" : "Ascending"}
+      </Button>
       <ListGroup>
         {/* TODO: Add a loading state  */}
-        {restaurants.map((restaurant) => (
+        {sortedRestaurants.map((restaurant) => (
           <ListGroup.Item
             key={restaurant.id}
             action
